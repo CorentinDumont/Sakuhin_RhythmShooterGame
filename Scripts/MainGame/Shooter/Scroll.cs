@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// attached to the background of the shooter game to give the illusion of movement by scrolling the background
+
+using UnityEngine;
 using System.Collections;
 
 public class Scroll : MonoBehaviour {

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Utilitary script to fix a bug of Unity v5.3.1f1 about the behaviour of particles systems in the edit mode
+
+using UnityEngine;
 using System.Collections;
 
 [ExecuteInEditMode]

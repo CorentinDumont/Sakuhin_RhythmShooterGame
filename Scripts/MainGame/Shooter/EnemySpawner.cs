@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿// script used to spawn enemies and asteroids
+// attached to an object not visible on the screen, at the top of the playing field
+
+using UnityEngine;
 using System.Collections;
 
 public class EnemySpawner : MonoBehaviour {
 
 	private bool canGen = true;
-	public GameObject[] enemies;
+	public GameObject[] enemies; // ennemies that can be generated (ships, asteroids...)
 
-	IEnumerator GenerateEnemies()
+	IEnumerator GenerateEnemies() // randomly generates enemies
 	{
 		yield return new WaitForSeconds (Random.Range (0.5f, 2.5f));
 		Vector3 size = GetComponent<Renderer> ().bounds.size;

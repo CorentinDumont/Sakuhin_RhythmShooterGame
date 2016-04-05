@@ -1,19 +1,22 @@
-﻿using UnityEngine;
+﻿// Script that defines the behaviour of the player ship in function of the user : pressed keys, score in rhythm game, equipped items...
+// Is attached to the playerShip object
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerShip : MonoBehaviour {
 
 	public float speed = 5.0f;
-	public GameObject explosion;
-	public GameEventsHandler handler;
+	public GameObject explosion; // prefab of the explosion animation for the player
+	public GameEventsHandler handler; // instance of the obect that handles events (combo,...)
 
-	public List<Item> possibleItems = new List<Item>();
+	public List<Item> possibleItems = new List<Item>(); // items equipped
 	private Vector3 startPosition;
 	private int selectedWeapon = -1;
-	private Weapon weapon;
+	private Weapon weapon; // currently used weapon
 	private int selectedArmor = -1;
-	private Armor armor;
+	private Armor armor; // currently used armor
 
 	// Use this for initialization
 	void Start () {
@@ -22,15 +25,22 @@ public class PlayerShip : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update () { // move the ship in function of the arrows pressed on the keyboard
 		GetComponent<Rigidbody>().velocity = new Vector3(Input.GetAxis ("Vertical"),0.0f,-Input.GetAxis ("Horizontal"))*speed;
 	}
+
+	///////////////////////////
+	/// Gestion of Items //////
+	///////////////////////////
 
 	public void addPossibleItems(Item newItem){
 		possibleItems.Add (newItem);
 		UpdateItems ();
 	}
 
+	// Choose what items to be used in function of damages, combo...
+	// In the current state, 1 weapon and 1 armor can be used at a time
+	// among the items that can be selected (see CanBeSelected of Items.cs), the items with the best levels are used
 	public void UpdateItems(){
 		int combo = handler.GetCombo ();
 		Item checkedItem;
@@ -69,6 +79,7 @@ public class PlayerShip : MonoBehaviour {
 		}
 	}
 
+	// Used by UpdateItems to change the armor
 	void ChangeArmor()
 	{
 		if (armor != null) {
@@ -81,6 +92,7 @@ public class PlayerShip : MonoBehaviour {
 		}
 	}
 
+	// Used by UpdateItems to change the weapon
 	void ChangeWeapon()
 	{
 		if (weapon != null) {
@@ -93,7 +105,12 @@ public class PlayerShip : MonoBehaviour {
 		}
 	}
 
-	public void TakeDamage(int damage){
+	///////////////////////////
+	/// Gestion of damages ////
+	///////////////////////////
+
+	public void TakeDamage(int damage){ // When the player miss the rhythm game, the damages are sent to the ship (here)
+										//, and the ship send damages to equipped items
 		if (armor != null) {
 			Armor currentArmor = armor.transform.GetComponent<Armor> ();
 			currentArmor.TakeDamage (damage);
@@ -104,12 +121,14 @@ public class PlayerShip : MonoBehaviour {
 		}
 	}
 
+	// Used by the event handler to respawn the player
 	public void ResetPosition(){
 		this.transform.position = this.startPosition;
 		ChangeArmor ();
 		ChangeWeapon ();
 	}
 
+	// Destroys itself and display an explosion animation
 	public void Explode() {
 		Instantiate (explosion, transform.position, Quaternion.identity);
 		handler.ResetPlayer ();
