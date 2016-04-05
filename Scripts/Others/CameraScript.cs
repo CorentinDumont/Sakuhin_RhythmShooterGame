@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿//Script for controlling the Aspect ratio, to add to the main camera.
+//form http://gamedesigntheory.blogspot.jp/2010/09/controlling-aspect-ratio-in-unity.html
+
+using UnityEngine;
 using System.Collections;
 
 public class CameraScript : MonoBehaviour {

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// abstract class used to defined some functions that are used by the menus in all the game (Main title, pause menu...)
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -15,22 +17,27 @@ public abstract class Menu : MonoBehaviour {
 		OnStart ();
 	}
 
-	abstract protected void OnStart ();
+	abstract protected void OnStart (); // The starting function differs from a menu to an other, so it has to be redefined
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown("down") || Input.GetKeyDown("right")) {
-			ChangeChoice(1);
+		if (Input.GetKeyDown("down") || Input.GetKeyDown("right")) { // when the player press down or right
+			ChangeChoice(1); // go down in the menu
 		}
-		else if (Input.GetKeyDown("up") || Input.GetKeyDown("left")) {
-			ChangeChoice(-1);
+		else if (Input.GetKeyDown("up") || Input.GetKeyDown("left")) { // when the player press up or left
+			ChangeChoice(-1); // go up in the menu
 		}
-		if (Input.GetKeyDown("return")) {
-			choices [selected].OnChoosen ();
+		if (Input.GetKeyDown("return")) { // when the player press return/enter
+			choices [selected].OnChoosen (); // call the specific function attached to the selected menu item
 		}
 	}
 
-	void HighlightChoice(){
+	void ChangeChoice(int direction){ // called from Update, change the selected item in the menu
+		selected = (int)Mathf.Repeat (selected + direction, choices.Length);
+		HighlightChoice ();
+	}
+
+	void HighlightChoice(){ // highlight the selected menu item by changing the color of the displayed text
 		for (int i = 0; i < choices.Length; i++) {
 			if (i == selected) {
 				choices [i].GetComponent<Text> ().color = selectedColor;
@@ -39,10 +46,5 @@ public abstract class Menu : MonoBehaviour {
 				choices [i].GetComponent<Text> ().color = NonSelectedColor;
 			}
 		}
-	}
-
-	void ChangeChoice(int direction){
-		selected = (int)Mathf.Repeat (selected + direction, choices.Length);
-		HighlightChoice ();
 	}
 }

@@ -1,13 +1,19 @@
-﻿using UnityEngine;
+﻿// attached to the panel where the characteristics of items is displayed
+// necessary to adapt the size and position of the sub Panel objects containing the characteristics
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class CharacteristicsPanel : MonoBehaviour {
 
-	public Characteristic charactericticSubPanel;
+	public Characteristic charactericticSubPanel; // prefab used to instantiate sub Panel, see Characteristic.cs
 
 	public void CreateContent (Item item){
+
+		// Create sub Panel from the charactericticSubPanel Prefab and fill them with the characteristics of the Item
+
 		Pair<string, int> level = new Pair<string, int>("Level : ",item.GetComponent<Item> ().level);
 		Pair<string, int> combo = new Pair<string, int>("Threshold : ",item.GetComponent<Item> ().comboThreshold);
 		Pair<string, int> resistance = new Pair<string, int>("Resistance : ",item.GetComponent<Item> ().breakResistance);
@@ -15,6 +21,8 @@ public class CharacteristicsPanel : MonoBehaviour {
 		listCharacteristics.Add (level);
 		listCharacteristics.Add (combo);
 		listCharacteristics.Add (resistance);
+
+		// Position and size the sub Panels
 
 		RectTransform transform = GetComponent<RectTransform> ();
 		float height = transform.rect.height;
@@ -32,7 +40,7 @@ public class CharacteristicsPanel : MonoBehaviour {
 		}
 	}
 
-	public void Clear(){
+	public void Clear(){ // Clear the panel
 		foreach (Transform child in this.transform) {
 			Destroy(child.gameObject);
 		}

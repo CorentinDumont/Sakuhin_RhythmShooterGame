@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿// attached to the menu panels where the menu items (type of items, names of items) are displayed
+// necessary to adapt the size and position of the sub Panel objects
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,12 +10,13 @@ public class ChoicesPanel : MonoBehaviour {
 
 	public SubPanel subPanel;
 
-	private List<SubPanel> listChoices = new List<SubPanel> ();
-	private int size = 10;
-	private int selectedChoice = 0;
-	private int firstDisplayed = 0;
-	private bool hasFocus = false;
+	private List<SubPanel> listChoices = new List<SubPanel> (); // list of choices (menu items)
+	private int size = 10; // max number of items displayed
+	private int selectedChoice = 0; // currently selected item
+	private int firstDisplayed = 0; // index of the item displayed in the first position of the menu (may b bigger than 0 if there are more than size possible choices)
+	private bool hasFocus = false; // is focus on this menu?
 
+	// Create a sub panel containing on possible choice (menu item), see SubPanel.cs
 	public void CreateChoice(string nameChoice, string displayedText, bool hasCheckbox, bool isChecked){
 		RectTransform transform = GetComponent<RectTransform> ();
 		SubPanel sub = (SubPanel)Instantiate(subPanel);
@@ -24,28 +28,34 @@ public class ChoicesPanel : MonoBehaviour {
 		listChoices.Add (sub);
 	}
 
-	public bool HasChoices(){
+
+	//////////////////////////////
+	/// Used by ListOfItems.cs ///
+	//////////////////////////////
+
+	public bool HasChoices(){ // Determines whether this instance has choices.
 		return (listChoices.Count > 0);
 	}
 
-	public void SetSize(int size){
+	public void SetSize(int size){ // Sets the size.
 		this.size = size;
 	}
 
-	public string GetSelectedChoice(){
+	public string GetSelectedChoice(){ // return name of the currently selected choice
 		return listChoices[selectedChoice].nameSubPanel;
 	}
 
-	public int GetIndexSelectedChoice(){
+	public int GetIndexSelectedChoice(){ // return index of the currently selected choice
 		return selectedChoice;
 	}
 
-	public void SetFocus(bool b){
+	public void SetFocus(bool b){ // set or unset the focus and update highlighting
 		hasFocus = b;
 		HighlightChoice ();
 	}
 
-	public string ChangeChoice(int direction){
+	public string ChangeChoice(int direction){ // Change the selected menu item when the user press up or down
+												// called from ListOfItems.cs
 		if (listChoices!=null && listChoices.Count>0) {
 			selectedChoice = (int)Mathf.Repeat (selectedChoice + direction, listChoices.Count);
 			if(selectedChoice>size-1){
@@ -62,7 +72,7 @@ public class ChoicesPanel : MonoBehaviour {
 		return "";
 	}
 
-	void HighlightChoice(){
+	void HighlightChoice(){ // Highlight the choice by sending the information to the subPanel
 		for (int i=0; i<listChoices.Count; i++){
 			if (i == selectedChoice && hasFocus) {
 				listChoices [i].Highlight (true);
@@ -73,7 +83,7 @@ public class ChoicesPanel : MonoBehaviour {
 		}
 	}
 
-	public void Display(int begining){
+	public void Display(int begining){ // Displays (and position) up to size items from the index begining
 		foreach (Transform child in this.transform) {
 			child.gameObject.SetActive (false);
 		}
@@ -88,12 +98,12 @@ public class ChoicesPanel : MonoBehaviour {
 		HighlightChoice ();
 	}
 
-	public void ResetSelection(){
+	public void ResetSelection(){ // reset the position of the user in the menu
 		selectedChoice = 0;
 		firstDisplayed = 0;
 	}
 
-	public void Clear(){
+	public void Clear(){ // Empty the menu
 		foreach (Transform child in this.transform) {
 			Destroy(child.gameObject);
 		}

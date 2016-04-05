@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// attached to the panel that contains the characteristics of items
+// necessary to position and size correctly the objects inside the panel
+// used by CharacteristicsPanel.cs
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 

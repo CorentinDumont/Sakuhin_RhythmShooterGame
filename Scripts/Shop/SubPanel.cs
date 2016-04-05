@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// attached to the panel that correspond to each menu items in the shop
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ public class SubPanel : MonoBehaviour {
 	public int selectedFontSize = 22;
 	public int nonSelectedFontSize = 20;
 
+	// Set the content of the panel (a name and eventually a checkbox, checked or not, to indicate if the object corresponding to the menu tem is equiped
 	public void UpdateContent(string nameChoice, string displayedText, bool hasCheckbox, bool isChecked){
 		nameSubPanel = nameChoice;
 		this.displayedText.text = displayedText;
@@ -32,7 +35,7 @@ public class SubPanel : MonoBehaviour {
 		this.displayedText.GetComponent<RectTransform> ().sizeDelta = new Vector2(rect.width*ratioText, this.displayedText.GetComponent<RectTransform> ().sizeDelta.y);
 	}
 
-	public void Highlight(bool b){
+	public void Highlight(bool b){ // Used to highlight the menu item that is currently selected by changing the font size and background color
 		if (b) {
 			GetComponent<Image>().color = selectedColor;
 			displayedText.fontSize = selectedFontSize;

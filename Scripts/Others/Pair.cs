@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿// Utility class that imitates the pair type of C++
+
+using UnityEngine;
 using System.Collections;
 
 public class Pair<T, U> {
