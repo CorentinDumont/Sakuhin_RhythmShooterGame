@@ -1,6 +1,7 @@
 # Sakuhin_RhythmShooterGame
 
 Developped entirely by Corentin Dumont.
+Still under development.
 
 Game developped with Unity version 5.3.
 Repository contains this application built for OS X only, and the Assets folder of the game.
