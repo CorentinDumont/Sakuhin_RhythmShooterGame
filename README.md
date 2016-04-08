@@ -12,5 +12,6 @@ Choose your weapons in the Weapon's shop, and play. This is a mix between a Shoo
 
 Game's controls:
 Move the ship with the arrows.
-Tap on the "g" key in rhythm with the dics of the Rhythm game to make your ship stronger.
-Tap on "p" to pause.
+Tap on the "f","g" and "h" keys (respectively for the left, middle and right tiles) in rhythm with the beats of the music. 
+Tap on "p" to pause/unpause.
+Tap on "u"/"i" to decrease/increase the difficulty of the rythm game. (This will of course be done automatically in the final version)
