@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 ﻿// defines the BulletWeaponLevel abstract class
 // attached to the BulletWeaponLevel1 objects, defines the particularity of this weapon
 
 using UnityEngine;
+=======
+﻿using UnityEngine;
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 using System.Collections;
 
 public class BulletLevel1 : BulletLevel {
@@ -11,7 +15,11 @@ public class BulletLevel1 : BulletLevel {
 		OnUpdate ();
 	}
 
+<<<<<<< HEAD
 	override protected IEnumerator ShootBullet() // shoot 3 bullet every 0.2 second
+=======
+	override protected IEnumerator ShootBullet()
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	{
 		yield return new WaitForSeconds (0.2f);
 		Instantiate (bullet, transform.position, transform.rotation);

@@ -17,7 +17,10 @@ public class GameEventsHandler : MonoBehaviour {
 	public PlayerShip playerShip; // player ship object
 	public Item[] allItems; // all items, some of them (choosen in the shop) will be attached to the player ship
 	//public Text scoreText;
+<<<<<<< HEAD
 	public Text comboText;
+=======
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 
 
 	void Start(){
@@ -25,7 +28,10 @@ public class GameEventsHandler : MonoBehaviour {
 		SaveLoad.Load (); // loads the game save that contains the items that have to be attached to the player
 		AddItemsToPlayer (Game.current.armors); // attaches selected armors to the player ship
 		AddItemsToPlayer (Game.current.weapons); // attaches selected weapons to the player ship
+<<<<<<< HEAD
 		DisplayCombo();
+=======
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 
 	///////////////////////////////
@@ -58,6 +64,7 @@ public class GameEventsHandler : MonoBehaviour {
 	public int GetCombo(){
 		return combo;
 	}
+<<<<<<< HEAD
 		
 	void DisplayCombo(){
 		if (combo < 2) {
@@ -71,6 +78,10 @@ public class GameEventsHandler : MonoBehaviour {
 
 	public void UpdateScore(int score){
 		GetComponent<Appreciations> ().DisplayAppreciation (score);
+=======
+
+	public void UpdateScore(int score){
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 		scores [score] += 1;
 		if (score < 3) {
 			combo = 0;
@@ -82,7 +93,10 @@ public class GameEventsHandler : MonoBehaviour {
 		if (combo > maxCombo) {
 			maxCombo = combo;
 		}
+<<<<<<< HEAD
 		DisplayCombo ();
+=======
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 		playerShip.UpdateItems ();
 	}
 

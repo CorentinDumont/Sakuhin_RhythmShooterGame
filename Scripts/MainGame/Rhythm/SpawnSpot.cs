@@ -2,11 +2,15 @@
 
 using UnityEngine;
 using System.Collections;
+<<<<<<< HEAD
 using System.Collections.Generic;
+=======
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 
 public class SpawnSpot : MonoBehaviour {
 
 	public GameObject bubble; // prefab of the Bubbles
+<<<<<<< HEAD
 	public GameObject[] targets; // the target to reach (may be changed to an array of several targets)
 	public float[] reachTimesByDifficulty = new float[4]{1f,1f,1f,1f}; // Times for bubbles to reach their target
 	public float stageDuration; // length of the stage
@@ -99,10 +103,27 @@ public class SpawnSpot : MonoBehaviour {
 	void Spawn(GameObject target, float reachTime){ // Spawn a bubble
 		GameObject go = (GameObject)Instantiate (bubble, this.transform.position, Quaternion.identity);
 		go.GetComponent<Bubble>().Initialize (target,reachTime);
+=======
+	public GameObject target; // the target to reach (may be changed to an array of several targets)
+	private bool canSpawn = true; // can generate a bubble?
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+
+	IEnumerator Spawn(){ // wait randomly up to 2 seconds and generate a bubble
+						// at term, this will not be random anymore, but will follow the rhythm of the music
+		yield return new WaitForSeconds (Random.Range (0, 2.0f));
+		GameObject go = Instantiate (bubble, this.transform.position, Quaternion.identity) as GameObject;
+		go.SendMessage ("AtStart",new Pair<GameObject,float>(target,2.0f));
+		canSpawn = true;
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 	
 	// Update is called once per frame
 	void Update () {
+<<<<<<< HEAD
 		if (GetComponent<AudioSource> ().isPlaying) {
 			if (GetComponent<AudioSource> ().time < currentAudioTime) {
 				numberLoops++;
@@ -147,5 +168,13 @@ public class SpawnSpot : MonoBehaviour {
 				//Spawn (targets[2],beatTimeBuff - realTime);
 			}
 		}
+=======
+
+		if (canSpawn) {
+			canSpawn = false;
+			StartCoroutine (Spawn ()); // spawn a bubble
+		}
+	
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 }

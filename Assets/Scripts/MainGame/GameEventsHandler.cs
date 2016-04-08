@@ -1,12 +1,17 @@
+<<<<<<< HEAD
 ﻿// script that handle the events that influence both the shooter and rhythm game (update combo, set items of player...)
 
 using UnityEngine;
+=======
+﻿using UnityEngine;
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameEventsHandler : MonoBehaviour {
 
+<<<<<<< HEAD
 	//private int lives = 3;
 	//private int score = 0;
 	private int combo = 0; // current combo
@@ -32,6 +37,27 @@ public class GameEventsHandler : MonoBehaviour {
 	// Attaching items to player //
 	///////////////////////////////
 
+=======
+	private int lives = 3;
+	private int score = 0;
+	private int combo = 0;
+	private int maxCombo = 0;
+	private int[] scores = new int[6] {0, 0, 0, 0, 0, 0};
+	private bool canRespawnPlayer = true;
+
+	public PlayerShip playerShip;
+	public Item[] allItems;
+	public Text scoreText;
+
+
+	void Start(){
+		Game.current = new Game ();
+		SaveLoad.Load ();
+		AddItemsToPlayer (Game.current.armors);
+		AddItemsToPlayer (Game.current.weapons);
+	}
+
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	Item GetItemByName(string name){
 		foreach (Item item in allItems) {
 			if (item.name == name) {
@@ -51,6 +77,7 @@ public class GameEventsHandler : MonoBehaviour {
 		}
 	}
 
+<<<<<<< HEAD
 	///////////////////////////////
 	//      Updating Combo       //
 	///////////////////////////////
@@ -71,6 +98,28 @@ public class GameEventsHandler : MonoBehaviour {
 
 	public void UpdateScore(int score){
 		GetComponent<Appreciations> ().DisplayAppreciation (score);
+=======
+	public int GetCombo(){
+		return combo;
+	}
+
+	IEnumerator RespawnPlayer(){
+		playerShip.gameObject.SetActive (false);
+		playerShip.ResetPosition ();
+		yield return new WaitForSeconds (1.0f);
+		playerShip.gameObject.SetActive (true);
+		canRespawnPlayer = true;
+	}
+
+	public void ResetPlayer(){
+		if (canRespawnPlayer) {
+			canRespawnPlayer = false;
+			StartCoroutine (RespawnPlayer ());
+		}
+	}
+
+	public void UpdateScore(int score){
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 		scores [score] += 1;
 		if (score < 3) {
 			combo = 0;
@@ -82,6 +131,7 @@ public class GameEventsHandler : MonoBehaviour {
 		if (combo > maxCombo) {
 			maxCombo = combo;
 		}
+<<<<<<< HEAD
 		DisplayCombo ();
 		playerShip.UpdateItems ();
 	}
@@ -104,4 +154,8 @@ public class GameEventsHandler : MonoBehaviour {
 			StartCoroutine (RespawnPlayer ());
 		}
 	}
+=======
+		playerShip.UpdateItems ();
+	}
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 }

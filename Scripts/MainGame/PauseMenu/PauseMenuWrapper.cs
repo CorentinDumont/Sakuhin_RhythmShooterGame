@@ -11,16 +11,21 @@ public class PauseMenuWrapper : MonoBehaviour {
 	
 	private bool paused = false;
 	public GameObject pauseMenuCanvas; // canvas containg the objects of the pause menu
+<<<<<<< HEAD
 	public SpawnSpot spawnSpot; // the object on which the audioSource of the main scene is attached
 
 	void Start(){
 		spawnSpot.Play();
 	}
+=======
+	public GameObject rythmBoard; // the object on which the audioSource of the main scene is attached
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 
 	void Update(){
 		if (Input.GetKeyDown("p")) {
 			TogglePause ();
 		}
+<<<<<<< HEAD
 		if (Input.GetKeyDown("o")) {
 			spawnSpot.Play();
 		}
@@ -30,6 +35,8 @@ public class PauseMenuWrapper : MonoBehaviour {
 		if (Input.GetKeyDown("u")) {
 			spawnSpot.DecreaseDifficulty();
 		}
+=======
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 
 	public void TogglePause(){
@@ -37,13 +44,21 @@ public class PauseMenuWrapper : MonoBehaviour {
 			pauseMenuCanvas.SetActive (false);
 			paused = false;
 			Time.timeScale = 1;	// unpause the time
+<<<<<<< HEAD
 			spawnSpot.Play(); // unpause the audio source
+=======
+			rythmBoard.GetComponent<AudioSource> ().Play (); // unpause the audio source
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 		}
 		else {
 			pauseMenuCanvas.SetActive (true);
 			paused = true;
 			Time.timeScale = 0; // pause the time
+<<<<<<< HEAD
 			spawnSpot.Pause(); // pause the audio source
+=======
+			rythmBoard.GetComponent<AudioSource> ().Pause (); // pause the audio source
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 		}
 	}
 }

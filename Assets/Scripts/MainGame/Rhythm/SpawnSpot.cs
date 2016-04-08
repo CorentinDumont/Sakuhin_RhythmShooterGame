@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿// Script attach to the object that will generate the bubbles for the rhythm game (see Bubble.cs, PlayerTile.cs)
 
 using UnityEngine;
@@ -99,10 +100,32 @@ public class SpawnSpot : MonoBehaviour {
 	void Spawn(GameObject target, float reachTime){ // Spawn a bubble
 		GameObject go = (GameObject)Instantiate (bubble, this.transform.position, Quaternion.identity);
 		go.GetComponent<Bubble>().Initialize (target,reachTime);
+=======
+﻿using UnityEngine;
+using System.Collections;
+
+public class SpawnSpot : MonoBehaviour {
+
+	public GameObject bubble;
+	public GameObject target;
+	private bool canSpawn = true;
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+
+	IEnumerator Spawn(){
+		yield return new WaitForSeconds (Random.Range (0, 2.0f));
+		GameObject go = Instantiate (bubble, this.transform.position, Quaternion.identity) as GameObject;
+		go.SendMessage ("AtStart",new Pair<GameObject,float>(target,2.0f));
+		canSpawn = true;
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 	
 	// Update is called once per frame
 	void Update () {
+<<<<<<< HEAD
 		if (GetComponent<AudioSource> ().isPlaying) {
 			if (GetComponent<AudioSource> ().time < currentAudioTime) {
 				numberLoops++;
@@ -147,5 +170,13 @@ public class SpawnSpot : MonoBehaviour {
 				//Spawn (targets[2],beatTimeBuff - realTime);
 			}
 		}
+=======
+
+		if (canSpawn) {
+			canSpawn = false;
+			StartCoroutine (Spawn ());
+		}
+	
+>>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 	}
 }
