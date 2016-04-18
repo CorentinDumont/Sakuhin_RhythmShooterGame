@@ -1,5 +1,9 @@
 # Sakuhin_RhythmShooterGame
 
+####################################################
+## Please have a look at 作品_Dumont_Corentin.pdf ##
+####################################################
+
 Developped entirely by Corentin Dumont.
 Still under development.
 
