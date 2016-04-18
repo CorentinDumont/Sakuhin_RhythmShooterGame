@@ -6,7 +6,7 @@ using System.Collections;
 
 public class ForceFieldArmor : Armor {
 
-	override public bool CanBeSelected(int combo){ // define the condition for the armor to be selected
-		return (combo >= comboThreshold);
+	override public bool CanBeSelected(){ // define the condition for the armor to be selected
+		return (GameValuesContainer.container.combo >= comboThreshold);
 	}
 }

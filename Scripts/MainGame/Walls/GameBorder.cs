@@ -6,7 +6,7 @@ using System.Collections;
 
 public class GameBorder : MonoBehaviour {
 
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerExit(Collider other) {
 		Destroy (other.gameObject);
 	}
 }

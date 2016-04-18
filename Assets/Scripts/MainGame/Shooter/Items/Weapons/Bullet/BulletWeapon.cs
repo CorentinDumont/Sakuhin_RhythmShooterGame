@@ -1,21 +1,82 @@
-<<<<<<< HEAD
 ﻿// defines the abstract Weapon (that heritates from abstract Item class) class
 // attached to every Bullet (weapons) objects
 
 using UnityEngine;
-=======
-﻿using UnityEngine;
->>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
 using System.Collections;
 
 public class BulletWeapon : Weapon {
 
-<<<<<<< HEAD
-	override public bool CanBeSelected(int combo){ // define the condition for the armor to be selected
-=======
-	override public bool CanBeSelected(int combo){
->>>>>>> c231e09f7cec6e7c0dbe4ce60c8437890f4a3479
-		return (combo >= comboThreshold);
+	public GameObject bullet;
+
+	private bool canGen = false;
+
+	void Update(){
+		if (canGen) {
+			canGen = false;
+			StartCoroutine (ShootBullet());
+		}
+	}
+
+	override public void Initialize(){
+		canGen = true;
+	}
+
+	void InstantiateParticle(Vector3 offsetPosition, Quaternion offsetRotation){
+		GameObject particle;
+		particle = (GameObject)Instantiate (bullet, transform.position + offsetPosition, transform.rotation * offsetRotation);
+		particle.transform.SetParent (GameValuesContainer.container.particlesContainer.transform);
+	}
+
+	IEnumerator ShootBullet() // shoot 3 bullet every 0.2 second
+	{
+		if (level == 0) {
+			yield return new WaitForSeconds (0.1f);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(0.0f,0.0f,0.0f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.identity);
+			canGen = true;
+		}
+		else if (level == 1) {
+			yield return new WaitForSeconds (0.1f);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -5, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(0.0f,0.0f,0.0f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 5, 0.0f));
+			canGen = true;
+		}
+		else if (level == 2) {
+			yield return new WaitForSeconds (0.05f);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -10, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -5, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(0.0f,0.0f,0.0f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 5, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 10, 0.0f));
+			canGen = true;
+		}
+		else if (level == 3) {
+			yield return new WaitForSeconds (0.02f);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -15, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -10, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.Euler (0.0f, -5, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, 0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(0.0f,0.0f,0.0f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.identity);
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 5, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 10, 0.0f));
+			InstantiateParticle(new Vector3(-0.2f, 0.0f, -0.3f),Quaternion.Euler (0.0f, 15, 0.0f));
+			canGen = true;
+		}
+		else {
+			yield return new WaitForSeconds (0f);
+			canGen = true;
+		}
+	}
+
+	override public bool CanBeSelected(){ // define the condition for the armor to be selected
+		return (GameValuesContainer.container.combo >= comboThreshold);
 	}
 
 }

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 public class ListOfItems : MonoBehaviour {
 
-	public Item[] items; // Items to be displayed
+	public ItemsContainer allItems; // Items to be displayed
 
 	public ChoicesPanel typePanel; // panel displaying the categories of the items
 	public ChoicesPanel itemPanel; // panel displaying the list of the items in the category selected in typePanel
@@ -22,7 +22,7 @@ public class ListOfItems : MonoBehaviour {
 	public CharacteristicsPanel characteristicsPanel; // panel where the characteristics can be written
 	public DescriptionPanel descriptionPanel; // panel where the descriptions can be written
 
-	private Dictionary< string,List<Item> > objects; // dictionnary used to classify items by categories
+	private Dictionary< string,Item[] > objects; // dictionnary used to classify items by categories
 
 	private int selectedMenu = 0; // 0 if the player is focusing on the typePanel (chosing categories), 1 for itemPanel (choosing items)
 
@@ -54,25 +54,11 @@ public class ListOfItems : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// Loads the already equipped items from the save data, or start a new game if no data
-		Game.current = new Game ();
-		SaveLoad.Load ();
-		objects = new Dictionary< string,List<Item> >();
-		string tag;
-		List<Item> list;
-		for (int i = 0; i < items.Length; i++) {
-			tag = items[i].tag;
-			if (objects.ContainsKey(tag)) {
-				objects [tag].Add (items [i]);
-			} 
-			else {
-				list = new List<Item>();
-				list.Add (items [i]);
-				objects [tag] = list;
-			}
-		}
+		objects = new Dictionary<string,Item[]>();
+		objects ["Armors"] = allItems.armors;
+		objects ["Weapons"] = allItems.weapons;
 		foreach (string key in objects.Keys) {
-			objects[key].Sort((IComparer<Item>)new SorterItem());
+			Array.Sort(objects[key],(IComparer<Item>)new SorterItem());
 		}
 
 		// Sizes correctly the different panels so that the menu is always entirely visible, whatever the ration and size of the screen
@@ -86,7 +72,7 @@ public class ListOfItems : MonoBehaviour {
 			typePanel.CreateChoice (key,key,false,false);
 		}
 		// Adds a choice to go back to the main menu
-		objects ["Main Menu"] = new List<Item>();
+		objects ["Main Menu"] = new Item[0];
 		typePanel.CreateChoice ("Main Menu","Main Menu",false,false);
 		typePanel.Display(0);
 		typePanel.SetFocus (true);
@@ -137,10 +123,10 @@ public class ListOfItems : MonoBehaviour {
 		if (Input.GetKeyDown("return")) {
 			string selectedType = typePanel.GetSelectedChoice ();
 			if (selectedMenu == 0 && selectedType == "Main Menu") {
-				SceneManager.LoadScene ("Title");
+				SceneManager.LoadSceneAsync ("Title");
 			}
 			if (selectedMenu == 1) {
-				ToggleItem (objects [selectedType] [itemPanel.GetIndexSelectedChoice()]);
+				ToggleItem (selectedType,objects [selectedType] [itemPanel.GetIndexSelectedChoice()]);
 				SelectType (selectedType);
 			}
 		}
@@ -160,13 +146,16 @@ public class ListOfItems : MonoBehaviour {
 		RemoveCharacteristics ();
 		Item selectedObject = objects [typePanel.GetSelectedChoice()] [itemPanel.GetIndexSelectedChoice()];
 		Vector3 testItemPosition;
-		if (selectedObject.tag == "Weapon") {
+		if (typePanel.GetSelectedChoice () == "Weapons") {
 			testItemPosition = new Vector3 (1f, 0f, 0f);
 		}
 		else {
 			testItemPosition = new Vector3 (0f, 0f, 0f);
 		}
 		testItem = (Item)Instantiate(selectedObject,testItemPosition,Quaternion.identity);
+		if (testItem.GetComponent<Weapon> () != null) {
+			testItem.GetComponent<Weapon> ().Initialize ();
+		}
 
 		characteristicsPanel.CreateContent (selectedObject);
 
@@ -183,8 +172,8 @@ public class ListOfItems : MonoBehaviour {
 	}
 
 	// Equips or Desequips an item and save
-	void ToggleItem(Item item){
-		if (item.tag == "Weapon") {
+	void ToggleItem(string type,Item item){
+		if (type == "Weapons") {
 			if (Game.current.weapons [item.level] == item.name) {
 				Game.current.weapons [item.level] = "";
 			}
@@ -192,7 +181,7 @@ public class ListOfItems : MonoBehaviour {
 				Game.current.weapons [item.level] = item.name;
 			}
 		}
-		else if (item.tag == "Armor") {
+		else if (type == "Armors") {
 			if (Game.current.armors [item.level] == item.name) {
 				Game.current.armors [item.level] = "";
 			}

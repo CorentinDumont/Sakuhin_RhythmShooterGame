@@ -8,6 +8,6 @@ using System.Collections;
 public class MainMenuShop : MenuChoice {
 
 	override protected void Effect(){
-		SceneManager.LoadScene ("Shop");
+		SceneManager.LoadSceneAsync ("Shop");
 	}
 }

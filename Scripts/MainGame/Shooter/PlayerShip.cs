@@ -9,19 +9,15 @@ public class PlayerShip : MonoBehaviour {
 
 	public float speed = 5.0f;
 	public GameObject explosion; // prefab of the explosion animation for the player
-	public GameEventsHandler handler; // instance of the obect that handles events (combo,...)
 
-	public List<Item> possibleItems = new List<Item>(); // items equipped
 	private Vector3 startPosition;
-	private int selectedWeapon = -1;
 	private Weapon weapon; // currently used weapon
-	private int selectedArmor = -1;
 	private Armor armor; // currently used armor
 
-	// Use this for initialization
-	void Start () {
+	void Start(){
 		startPosition = this.transform.position;
-		UpdateItems ();
+		GameValuesContainer.container.shooterHandler.Initialize ();
+		GameValuesContainer.container.rhythmHandler.Initialize ();
 	}
 
 	// Update is called once per frame
@@ -29,80 +25,95 @@ public class PlayerShip : MonoBehaviour {
 		GetComponent<Rigidbody>().velocity = new Vector3(Input.GetAxis ("Vertical"),0.0f,-Input.GetAxis ("Horizontal"))*speed;
 	}
 
+	public void Initialize(){
+		UpdateItems ();
+		if (armor != null) {
+			armor.gameObject.SetActive (true);
+		}
+		if (weapon != null) {
+			weapon.gameObject.SetActive (true);
+		}
+	}
+
 	///////////////////////////
 	/// Gestion of Items //////
 	///////////////////////////
-
-	public void addPossibleItems(Item newItem){
-		possibleItems.Add (newItem);
-		UpdateItems ();
-	}
 
 	// Choose what items to be used in function of damages, combo...
 	// In the current state, 1 weapon and 1 armor can be used at a time
 	// among the items that can be selected (see CanBeSelected of Items.cs), the items with the best levels are used
 	public void UpdateItems(){
-		int combo = handler.GetCombo ();
-		Item checkedItem;
-		int maxLevelWeapon = 0;
-		int maxLevelArmor = 0;
-		for (int i = 0; i < possibleItems.Count; i++) {
-			checkedItem = possibleItems [i].transform.GetComponent<Item> ();
-			if (checkedItem.tag == "Armor") {
-				if (checkedItem.CanBeSelected(combo) && checkedItem.level >= maxLevelArmor) {
-					selectedArmor = i;
-					maxLevelArmor = checkedItem.level;
-				}
-			}
-			else if (checkedItem.tag == "Weapon") {
-				if (checkedItem.CanBeSelected(combo) && checkedItem.level >= maxLevelWeapon) {
-					selectedWeapon = i;
-					maxLevelWeapon = checkedItem.level;
-				}
+		UpdateArmors ();
+		UpdateWeapons ();
+	}
+
+	public void UpdateArmors(){
+		int buffCurrentArmor = GameValuesContainer.container.currentArmor;
+		Armor newArmor = null;
+		int maxLevelArmor;
+		if (this.armor == null || this.armor.IsBroken ()) {
+			maxLevelArmor = -1;
+		}
+		else {
+			maxLevelArmor = this.armor.level;
+		}
+		for (int i = 0; i < GameValuesContainer.container.possibleArmors.Length; i++) {
+			newArmor = GameValuesContainer.container.possibleArmors [i];
+			if (newArmor.CanBeSelected () && newArmor.level > maxLevelArmor) {
+				GameValuesContainer.container.currentArmor = i;
+				maxLevelArmor = newArmor.level;
 			}
 		}
-		if (armor != null) {
-			Armor currentArmor = armor.transform.GetComponent<Armor> ();
-			if (currentArmor.IsBroken () || maxLevelArmor > currentArmor.level) {
-				ChangeArmor ();
-			}
-		} else {
-			ChangeArmor ();
+		if (GameValuesContainer.container.currentArmor != buffCurrentArmor) {
+			SetArmor (GameValuesContainer.container.possibleArmors [GameValuesContainer.container.currentArmor]);
 		}
-		if (weapon != null) {
-			Weapon currentWeapon = weapon.transform.GetComponent<Weapon> ();
-			if (currentWeapon.IsBroken () || maxLevelWeapon > currentWeapon.level) {
-				ChangeWeapon ();
+	}
+
+	public void UpdateWeapons(){
+		int buffCurrentWeapon = GameValuesContainer.container.currentWeapon;
+		Weapon newWeapon = null;
+		int maxLevelWeapon;
+		if (this.weapon == null || this.weapon.IsBroken ()) {
+			maxLevelWeapon = -1;
+		}
+		else {
+			maxLevelWeapon = this.weapon.level;
+		}
+		for (int i = 0; i < GameValuesContainer.container.possibleWeapons.Length; i++) {
+			newWeapon = GameValuesContainer.container.possibleWeapons [i];
+			if (newWeapon.CanBeSelected () && newWeapon.level > maxLevelWeapon) {
+				GameValuesContainer.container.currentWeapon = i;
+				maxLevelWeapon = newWeapon.level;
 			}
-		} else {
-			ChangeWeapon ();
+		}
+		if (GameValuesContainer.container.currentWeapon != buffCurrentWeapon){
+			SetWeapon (GameValuesContainer.container.possibleWeapons [GameValuesContainer.container.currentWeapon]);
 		}
 	}
 
 	// Used by UpdateItems to change the armor
-	void ChangeArmor()
+	void SetArmor(Armor newArmor)
 	{
 		if (armor != null) {
 			Destroy (armor.gameObject);
 		}
-		if(selectedArmor!=-1){
-			Armor objArmor = (Armor)Instantiate (possibleItems [selectedArmor], transform.position, Quaternion.identity);
-			armor = objArmor;
+		if (newArmor != null) {
+			armor = (Armor)Instantiate (newArmor, transform.position, transform.rotation);
 			armor.transform.parent = this.transform;
 		}
 	}
 
 	// Used by UpdateItems to change the weapon
-	void ChangeWeapon()
+	void SetWeapon(Weapon newWeapon)
 	{
 		if (weapon != null) {
 			Destroy (weapon.gameObject);
 		}
-		if(selectedWeapon!=-1){
-			Weapon objWeapon = (Weapon)Instantiate (possibleItems [selectedWeapon], transform.position + new Vector3 (1.0f, 0.0f, 0.0f), Quaternion.identity);
-			weapon = objWeapon;
+		if (newWeapon != null) {
+			weapon = (Weapon)Instantiate (newWeapon, transform.position + new Vector3 (1.0f, 0.0f, 0.0f), transform.rotation);
 			weapon.transform.parent = this.transform;
 		}
+		weapon.Initialize ();
 	}
 
 	///////////////////////////
@@ -112,25 +123,24 @@ public class PlayerShip : MonoBehaviour {
 	public void TakeDamage(int damage){ // When the player miss the rhythm game, the damages are sent to the ship (here)
 										//, and the ship send damages to equipped items
 		if (armor != null) {
-			Armor currentArmor = armor.transform.GetComponent<Armor> ();
-			currentArmor.TakeDamage (damage);
+			armor.TakeDamage (damage);
 		}
 		if (weapon != null) {
-			Weapon currentWeapon = weapon.transform.GetComponent<Weapon> ();
-			currentWeapon.TakeDamage (damage);
+			weapon.TakeDamage (damage);
 		}
+		UpdateItems ();
 	}
 
 	// Used by the event handler to respawn the player
 	public void ResetPosition(){
 		this.transform.position = this.startPosition;
-		ChangeArmor ();
-		ChangeWeapon ();
+		weapon.Initialize ();
 	}
 
 	// Destroys itself and display an explosion animation
 	public void Explode() {
-		Instantiate (explosion, transform.position, Quaternion.identity);
-		handler.ResetPlayer ();
+		GameObject particle = (GameObject)Instantiate (explosion, transform.position, Quaternion.identity);
+		particle.transform.SetParent (GameValuesContainer.container.particlesContainer.transform);
+		GameValuesContainer.container.shooterHandler.ResetPlayer ();
 	}
 }

@@ -8,6 +8,6 @@ using System.Collections;
 public class MainMenuPlay : MenuChoice {
 
 	override protected void Effect(){
-		SceneManager.LoadScene ("Main");
+		SceneManager.LoadSceneAsync ("StageSelection");
 	}
 }

@@ -6,7 +6,8 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
-	public float speed = 5.0f;
+	public float speed = 10f;
+	public int damages = 2;
 
 	// Use this for initialization
 	void Start () { // defines movement of the bullets, go straight with the specified speed
@@ -15,10 +16,9 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) { // defines the effects of collisions
-		if (other.gameObject.CompareTag ("Enemy")) {
-			other.GetComponent<Enemy> ().Explode (); // destroys colliding enemies (ships)
-		} else if (other.gameObject.CompareTag ("Asteroid")) {
-			other.GetComponent<Asteroid> ().Explode (); // destroys colliding asteroids
+		if (other.GetComponent<Enemy> () != null) {
+			other.GetComponent<Enemy> ().TakeDamages(damages); // destroys colliding enemies (ships)
+			Destroy(gameObject);
 		}
 	}
 

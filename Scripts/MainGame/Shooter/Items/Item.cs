@@ -30,5 +30,5 @@ abstract public class Item : MonoBehaviour {
 		}
 	}
 
-	abstract public bool CanBeSelected (int combo); // has to be redefined for each item, says if the item can be used in function of the comboThreshold, the damages...
+	abstract public bool CanBeSelected (); // has to be redefined for each item, says if the item can be used in function of the comboThreshold, the damages...
 }

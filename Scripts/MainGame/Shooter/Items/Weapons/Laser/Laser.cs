@@ -6,7 +6,8 @@ using System.Collections;
 
 public class Laser : MonoBehaviour {
 
-	public float speed = 7.0f;
+	public float speed = 15f;
+	public int damages = 1;
 
 	// Use this for initialization
 	void Start () { // defines movement of the bullets, go straight with the specified speed
@@ -15,12 +16,9 @@ public class Laser : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) { // defines the effects of collisions
-		if (other.gameObject.CompareTag ("Player") && this.gameObject.CompareTag("LaserEnemy")) {
-			other.GetComponent<PlayerShip> ().Explode (); // destroys colliding player if comes from enemies
-		} else if (other.gameObject.CompareTag ("Enemy") && this.gameObject.CompareTag("Laser")) {
-			other.GetComponent<Enemy> ().Explode (); // destroys colliding enemies (ships) if comes from player
-		} else if (other.gameObject.CompareTag ("Asteroid") && this.gameObject.CompareTag("Laser")) {
-			other.GetComponent<Asteroid> ().Explode (); // destroys colliding asteroids if comes from player
+		if (other.GetComponent<Enemy> () != null) {
+			other.GetComponent<Enemy> ().TakeDamages(damages); // destroys colliding enemies (ships)
+			Destroy(gameObject);
 		}
 	}
 }
