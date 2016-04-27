@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class PlayerTile : MonoBehaviour {
 
-	public string key; // key to press when a bubble is on the target
+	public string[] keys; // key to press when a bubble is on the target
 
 	private Queue<Bubble> bubbles; // contains the bubble that are currently over the target (there can be several at the same time)
 	private Animator animator;
@@ -20,7 +20,13 @@ public class PlayerTile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () { // used to detect when the player press the key corresponding to the target
-		if (Time.timeScale>0 && Input.GetKeyDown (key)) {
+		bool pressed = false;
+		for (int i = 0; i < keys.Length; i++) {
+			if(Input.GetKeyDown (keys[i])){
+				pressed = true;
+			}
+		}
+		if (Time.timeScale>0 && pressed) {
 			OnPressed ();
 		}
 	}
