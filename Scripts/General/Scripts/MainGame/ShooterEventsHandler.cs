@@ -35,11 +35,11 @@ public class ShooterEventsHandler : MonoBehaviour {
 	void Start(){
 		SetPossibleArmors (Game.current.armors); // attaches selected armors to the player ship
 		SetPossibleWeapons (Game.current.weapons); // attaches selected weapons to the player ship
-		playerShip.Initialize ();
 	}
 
 	public void Initialize(){
 		IncreaseScore(0);
+		playerShip.Initialize ();
 	}
 
 	public void Clear(){

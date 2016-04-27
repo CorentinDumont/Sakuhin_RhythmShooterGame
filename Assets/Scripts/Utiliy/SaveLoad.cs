@@ -29,4 +29,11 @@ public static class SaveLoad {
 			file.Close();
 		}
 	}
+
+	public static void Reset(){
+		if (File.Exists (Application.persistentDataPath + "/savedGame.gd")) {
+			File.Delete (Application.persistentDataPath + "/savedGame.gd");
+		}
+		Game.current = new Game ();
+	}
 }

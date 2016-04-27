@@ -15,12 +15,17 @@ public class PlayerShip : MonoBehaviour {
 	private Armor armor; // currently used armor
 
 	private bool invincible = false;
+	private Animator animator;
 
 	void Awake(){
 		startPosition = this.transform.position;
+		animator = GetComponent<Animator> ();
 	}
 
-	void Start(){
+	public void BeginGame(){
+		if (animator != null) {
+			Destroy (animator);
+		}
 		GameValuesContainer.container.shooterHandler.Initialize ();
 		GameValuesContainer.container.rhythmHandler.Initialize ();
 	}
@@ -50,6 +55,17 @@ public class PlayerShip : MonoBehaviour {
 	public void UpdateItems(){
 		UpdateArmors ();
 		UpdateWeapons ();
+		int armorLevel = 1;
+		int weaponLevel = 1;
+		if (armor != null) {
+			armorLevel = armor.level+1;
+		}
+		if (weapon != null) {
+			weaponLevel = weapon.level+1;
+		}
+		float level = (float)Mathf.Max (weaponLevel, armorLevel) * 3f / 5f + (float)Mathf.Min (weaponLevel, armorLevel) * 2f / 5f;
+		GameValuesContainer.container.rhythmHandler.spawnSpot.SetDifficulty(Mathf.CeilToInt(level));
+		GameValuesContainer.container.shooterHandler.enemySpawner.SetDifficulty(Mathf.CeilToInt(level));
 	}
 
 	public void UpdateArmors(){
@@ -72,6 +88,10 @@ public class PlayerShip : MonoBehaviour {
 		if (GameValuesContainer.container.currentArmor != buffCurrentArmor) {
 			SetArmor (GameValuesContainer.container.possibleArmors [GameValuesContainer.container.currentArmor]);
 		}
+		else if(this.armor != null && this.armor.IsBroken ()) {
+			GameValuesContainer.container.currentArmor = -1;
+			SetArmor (null);
+		}
 	}
 
 	public void UpdateWeapons(){
@@ -93,6 +113,10 @@ public class PlayerShip : MonoBehaviour {
 		}
 		if (GameValuesContainer.container.currentWeapon != buffCurrentWeapon){
 			SetWeapon (GameValuesContainer.container.possibleWeapons [GameValuesContainer.container.currentWeapon]);
+		}
+		else if(this.weapon != null && this.weapon.IsBroken ()) {
+			GameValuesContainer.container.currentWeapon = -1;
+			SetWeapon (null);
 		}
 	}
 
@@ -127,11 +151,19 @@ public class PlayerShip : MonoBehaviour {
 
 	public void TakeRhythmDamage(int damage){ // When the player miss the rhythm game, the damages are sent to the ship (here)
 										//, and the ship send damages to equipped items
-		if (armor != null) {
-			armor.TakeDamage (damage);
-		}
 		if (weapon != null) {
 			weapon.TakeDamage (damage);
+		}
+		UpdateItems ();
+	}
+
+	public void TakeShootingDamage(int damage){
+
+		if (armor == null) {
+			Explode ();
+		}
+		else {
+			armor.TakeDamage (damage);
 		}
 		UpdateItems ();
 	}

@@ -123,7 +123,7 @@ public class Boss01 : BossOrEnemy {
 		float distance = (directionTarget.transform.position - this.transform.position).magnitude;
 		float minDistance = distance;
 		while (distance <= minDistance) {
-			yield return null;
+			yield return  null;
 			distance = (directionTarget.transform.position - this.transform.position).magnitude;
 			minDistance = Mathf.Min (minDistance,distance);
 		}
@@ -145,7 +145,7 @@ public class Boss01 : BossOrEnemy {
 				degree = Mathf.Min (1, degree + 0.05f);
 				this.transform.LookAt (Utility.DirectionBetween (directionOrigin, directionFinal, degree) + this.transform.position, vectorUp);
 			}
-			yield return null;
+			yield return new WaitForSeconds(0.01f);
 		}
 		coroutineFollow = null;
 	}

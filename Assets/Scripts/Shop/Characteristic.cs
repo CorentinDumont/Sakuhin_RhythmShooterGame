@@ -16,8 +16,20 @@ public class Characteristic : MonoBehaviour {
 		displayedText.GetComponent<RectTransform> ().sizeDelta = new Vector2(rect.width*0.5f, displayedText.GetComponent<RectTransform> ().sizeDelta.y);
 	}
 
-	public void UpdateContent(string displayedText, int value){
-		this.displayedText.text = displayedText+value;
-		bar.GetComponent<Slider> ().value = value;
+	public void UpdateContent(string displayedText, int value, int maxValue, bool reverse){
+		bar.GetComponent<Slider> ().maxValue = maxValue;
+		if (value == -1) {
+			this.displayedText.text = displayedText+"inf";
+			bar.GetComponent<Slider> ().value = maxValue;
+		}
+		else {
+			this.displayedText.text = displayedText+value;
+			if (reverse) {
+				bar.GetComponent<Slider> ().value = maxValue - value;
+			}
+			else {
+				bar.GetComponent<Slider> ().value = value;
+			}
+		}
 	}
 }

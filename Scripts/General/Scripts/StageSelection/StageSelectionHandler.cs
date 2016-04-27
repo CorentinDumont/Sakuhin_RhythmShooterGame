@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class StageSelectionHandler : MonoBehaviour {
 
 	public GameObject stagesSelectionObject;
+	public DescriptionCanvas descriptionCanvas;
 	public float displayRatioDepth = 10;
 	public float displayRatioWidth = 15;
 
@@ -19,8 +20,11 @@ public class StageSelectionHandler : MonoBehaviour {
 	private AudioSource audioSource;
 
 	void Awake(){
+		Game.current = new Game (); // new Game if the load doesn't work
+		SaveLoad.Load (); // loads the game save that contains the items that have to be attached to the player
 		audioSource = GetComponent<AudioSource> ();
 		GameValuesContainer.container = new GameValuesContainer ();
+		Time.timeScale = 1.0f;
 	}
 
 	void Start(){
@@ -35,6 +39,7 @@ public class StageSelectionHandler : MonoBehaviour {
 		selectionLocation = 0;
 		Positioning (0);
 		stages [0].SetActivation (true);
+		descriptionCanvas.Display (true,stages[0].stageName);
 	}
 
 	void Positioning(float location){
@@ -84,13 +89,14 @@ public class StageSelectionHandler : MonoBehaviour {
 	}
 
 	IEnumerator Shift(bool clockWise,float distance) {
+		descriptionCanvas.Display (false);
 		for (int i = 0; i < stages.Length; i++) {
 			stages [i].SetActivation (false);
 		}
 		float location = 0;
 		float buffer = selectionLocation;
 		while (location!=distance) {
-			location = Mathf.Min(location+0.1f,distance);
+			location = Mathf.Min(location+0.1f*distance,distance);
 			if (clockWise) {
 				selectionLocation = Mathf.Repeat (buffer+location, stages.Length);
 			}
@@ -98,16 +104,19 @@ public class StageSelectionHandler : MonoBehaviour {
 				selectionLocation = Mathf.Repeat (buffer-location, stages.Length);
 			}
 			Positioning (selectionLocation);
-			yield return null;
+			yield return new WaitForSeconds(0.01f);
 		}
+		string stageName = "";
 		for (int i = 0; i < stages.Length; i++) {
 			if (i == selected) {
 				stages [i].SetActivation (true);
+				stageName = stages [i].stageName;
 			}
 			else {
 				stages [i].SetActivation (false);
 			}
 		}
+		descriptionCanvas.Display (true,stageName);
 		coroutine = null;
 	}
 		

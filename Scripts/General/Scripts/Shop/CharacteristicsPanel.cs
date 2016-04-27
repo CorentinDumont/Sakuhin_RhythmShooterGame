@@ -10,17 +10,35 @@ public class CharacteristicsPanel : MonoBehaviour {
 
 	public Characteristic charactericticSubPanel; // prefab used to instantiate sub Panel, see Characteristic.cs
 
+	public struct ItemData{
+		public ItemData(string label, int value, int maxValue, bool reverse){
+			this.label = label;
+			this.value = value;
+			this.maxValue = maxValue;
+			this.reverse = reverse;
+		}
+		public string label;
+		public int value;
+		public int maxValue;
+		public bool reverse;
+	}
+
 	public void CreateContent (Item item){
 
 		// Create sub Panel from the charactericticSubPanel Prefab and fill them with the characteristics of the Item
-
-		Pair<string, int> level = new Pair<string, int>("Level : ",item.GetComponent<Item> ().level);
-		Pair<string, int> combo = new Pair<string, int>("Threshold : ",item.GetComponent<Item> ().comboThreshold);
-		Pair<string, int> resistance = new Pair<string, int>("Resistance : ",item.GetComponent<Item> ().breakResistance);
-		List< Pair<string, int> > listCharacteristics = new List< Pair<string, int> >();
+		List< ItemData > listCharacteristics = new List< ItemData >();
+		ItemData level = new ItemData("Level : ",item.GetComponent<Item> ().level,3,false);
 		listCharacteristics.Add (level);
+		ItemData combo = new ItemData("Threshold : ",item.GetComponent<Item> ().comboThreshold,100,true);
 		listCharacteristics.Add (combo);
-		listCharacteristics.Add (resistance);
+		if(item.GetComponent<Armor>()!=null){
+			ItemData resistance = new ItemData("Resistance : ",item.GetComponent<Item> ().breakResistance,4,false);
+			listCharacteristics.Add (resistance);
+		}
+		else if(item.GetComponent<Weapon>()!=null){
+			ItemData resistance = new ItemData("Resistance : ",item.GetComponent<Item> ().breakResistance,10,false);
+			listCharacteristics.Add (resistance);
+		}
 
 		// Position and size the sub Panels
 
@@ -37,7 +55,7 @@ public class CharacteristicsPanel : MonoBehaviour {
 			sub.GetComponent<RectTransform> ().localRotation = Quaternion.Euler(Vector3.zero);
 			Vector2 positionPanel = new Vector2 (0, (height-step) / 2 - i*step) + offset;
 			sub.GetComponent<RectTransform> ().localPosition = positionPanel;
-			sub.UpdateContent (listCharacteristics[i].First, listCharacteristics[i].Second);
+			sub.UpdateContent (listCharacteristics[i].label, listCharacteristics[i].value, listCharacteristics[i].maxValue, listCharacteristics[i].reverse);
 		}
 	}
 

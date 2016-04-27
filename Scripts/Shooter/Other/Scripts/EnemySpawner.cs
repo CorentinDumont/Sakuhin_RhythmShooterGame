@@ -9,70 +9,58 @@ public class EnemySpawner : MonoBehaviour {
 
 	public GameObject[] enemies; // ennemies that can be generated (ships, asteroids...)
 	public GameObject boss;
-	private Dictionary< int,Queue< Pair<float,float> > > spawns;
+	private Queue<EnemyInformation> spawns;
 
 	private int difficulty = 1; // difficulty (will varies in function of used items
 	private IEnumerator coroutineBoss;
 
-	void Awake(){
+	private struct EnemyInformation{
+		public EnemyInformation(float time, int type, float position, int diffMin, int diffMax){
+			this.time = time;
+			this.type = type;
+			this.position = position;
+			this.diffMin = diffMin;
+			this.diffMax = diffMax;
+		}
+		public float time;
+		public int type;
+		public float position;
+		public int diffMin;
+		public int diffMax;
+	}
+
+	void Start(){
 		fillSpawns ();
 	}
 
 	void fillSpawns(){ // Defines the times where the beats of the rhythm games are
-		spawns = new Dictionary<int,Queue< Pair<float,float> > >();
-		float[] times = SpawnsTimes ();
-		int[] types = SpawnsTypes ();
-		float[] positions = SpawnsPositions ();
+		spawns = new Queue<EnemyInformation>();
+		float[] times = GameValuesContainer.container.currentStage.SpawnsTimes();
+		int[] types = GameValuesContainer.container.currentStage.SpawnsTypes();
+		float[] positions = GameValuesContainer.container.currentStage.SpawnsPositions();
+		int[] diffMin = GameValuesContainer.container.currentStage.SpawnsDifficultiesMin();
+		int[] diffMax = GameValuesContainer.container.currentStage.SpawnsDifficultiesMax();
 		for (int i=0;i<Mathf.Min(times.Length,types.Length);i++) {
-			if (!spawns.ContainsKey (types [i])) {
-				spawns [types [i]] = new Queue< Pair<float,float> > ();
-			}
-			spawns [types [i]].Enqueue (new Pair<float,float>(times[i],positions[i]));
-			if (types [i] == -1) {
-				if (GameValuesContainer.container == null) {
-					GameValuesContainer.container = new GameValuesContainer ();
-				}
-				GameValuesContainer.container.stageDuration = times [i];
-			}
+			EnemyInformation info = new EnemyInformation (times [i], types [i], positions [i], diffMin [i], diffMax [i]);
+			spawns.Enqueue (info);
 		}
 
 	}
 
-	protected float[] SpawnsTimes (){
-		float[] times = new float[]{1f,2f,3f,4f,5f,6f,7f,8f,9f,10f,
-			11f,12f,13f,14f,15f,16f,17f,18f,19f,20f,
-			21f,22f,23f,24f,25f,26f,27f,28f,29f,30f,
-			35f};
-		return times;
-	}
-	protected int[] SpawnsTypes (){
-		int[] types = new int[]{0,0,1,0,0,1,0,0,1,0,
-			0,1,0,0,1,0,0,1,0,0,
-			1,0,0,1,0,0,1,0,0,1,
-			-1};
-		return types;
-	}
-	protected float[] SpawnsPositions (){
-		float[] positions = new float[]{0,0,1,0,0,1,0,0,1,0,
-			0,1,0,0,1,0,0,1,0,0,
-			1,0,0,1,0,0,1,0,0,1,
-			0.5f};
-		return positions;
-	}
-
-	void setDifficulty(int difficulty){
+	public void SetDifficulty(int difficulty){
 		this.difficulty = difficulty;
 	}
 
 	public void IncreaseDifficulty(){
-		setDifficulty (Mathf.Min(4,difficulty + 1));
+		SetDifficulty (Mathf.Min(4,difficulty + 1));
 	}
 
 	public void DecreaseDifficulty(){
-		setDifficulty (Mathf.Max(1,difficulty - 1));
+		SetDifficulty (Mathf.Max(1,difficulty - 1));
 	}
 
 	void SpawnEnemy(int enemyIndex, float position){
+		GameValuesContainer.container.spawnedEnemies++;
 		float size = GetComponent<Renderer> ().bounds.size.z;
 		Vector3 spawnPoint = new Vector3(0,0,(position-0.5f)*size) + GetComponent<Renderer> ().bounds.center;
 		GameObject enemy = (GameObject)Instantiate (enemies [enemyIndex], spawnPoint, Quaternion.identity);
@@ -104,16 +92,15 @@ public class EnemySpawner : MonoBehaviour {
 		}
 	}
 
-	protected void SpawnAtTimes(){
+	void SpawnAtTimes(){
 		float currentAudioTime = GameValuesContainer.container.rhythmHandler.spawnSpot.GetTime ();
-		foreach (int key in spawns.Keys) {
-				while (spawns [key].Count > 0 && spawns [key].Peek ().First <= currentAudioTime) {
-				if (key == -1) {
-					SpawnBoss (spawns [key].Dequeue ().Second);
-				}
-				else {
-					SpawnEnemy (key, spawns [key].Dequeue ().Second);
-				}
+		while (spawns.Count > 0 && spawns.Peek ().time <= currentAudioTime) {
+			EnemyInformation info = spawns.Dequeue ();
+			if (info.type == -1) {
+				SpawnBoss (info.position);
+			}
+			else if(info.diffMin<=difficulty && info.diffMax>=difficulty){
+				SpawnEnemy (info.type, info.position);
 			}
 		}
 	}

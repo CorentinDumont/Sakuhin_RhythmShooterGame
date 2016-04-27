@@ -34,7 +34,7 @@ public class EnemyLaser : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) { // defines the effects of collisions
 		if (other.GetComponent<PlayerShip> () != null) {
-			other.GetComponent<PlayerShip> ().Explode (); // destroys colliding player
+			other.GetComponent<PlayerShip> ().TakeShootingDamage(1); // destroys colliding player
 			Destroy(gameObject);
 		} else if (other.GetComponent<Asteroid> () != null) {
 			other.GetComponent<Asteroid> ().Explode (); // destroys colliding asteroids

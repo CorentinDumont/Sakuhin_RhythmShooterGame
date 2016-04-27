@@ -31,14 +31,8 @@ public class MenuWrapper : MonoBehaviour {
 		if (Input.GetKeyDown("p")) {
 			TogglePause ();
 		}
-		if (Input.GetKeyDown("o")) {
-			DisplayResults ();
-		}
-		if (Input.GetKeyDown("i")) {
-			GameValuesContainer.container.rhythmHandler.spawnSpot.IncreaseDifficulty();
-		}
-		if (Input.GetKeyDown("u")) {
-			GameValuesContainer.container.rhythmHandler.spawnSpot.DecreaseDifficulty();
+		if (Input.GetKeyDown("y")) {
+			SaveLoad.Reset ();
 		}
 	}
 

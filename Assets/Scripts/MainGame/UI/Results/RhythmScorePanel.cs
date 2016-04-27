@@ -8,10 +8,13 @@ public class RhythmScorePanel : MonoBehaviour {
 	private RhythmLabel label;
 	private IEnumerator coroutine = null;
 
+	private ResultsCanvas parentCanvas;
+
 	// Use this for initialization
 	void Awake () {
 		graph = GetComponentInChildren<RhythmGraph> ();
 		label = GetComponentInChildren<RhythmLabel> ();
+		parentCanvas = transform.parent.gameObject.GetComponent<ResultsCanvas> ();
 		UpdateLayout ();
 	}
 
@@ -25,7 +28,7 @@ public class RhythmScorePanel : MonoBehaviour {
 					graph.SetScore(j,(float)scores[j]);
 				}
 				graph.DisplayResults (MaxScore(scores));
-				GameValuesContainer.container.menuWrapper.GetComponentInChildren<ResultsCanvas> ().OnGraphDisplayed ();
+				parentCanvas.OnGraphDisplayed ();
 			}
 		}
 	}
@@ -35,30 +38,43 @@ public class RhythmScorePanel : MonoBehaviour {
 		UpdateLayout ();
 	}
 
-	public void SetScores(){
+	public void SetScores(float duration = 1f){
 		if (coroutine != null) {
 			StopCoroutine (coroutine);
 		}
-		coroutine = CoroutineSetScores ();
+		coroutine = CoroutineSetScores (GameValuesContainer.container.rhythmScores,duration);
 		StartCoroutine (coroutine);
 	}
 
-	IEnumerator CoroutineSetScores(){
-		int[] scores = GameValuesContainer.container.rhythmScores;
+	public void SetScores(int[] scores,float duration = 1f){
+		if (coroutine != null) {
+			StopCoroutine (coroutine);
+		}
+		coroutine = CoroutineSetScores (scores,duration);
+		StartCoroutine (coroutine);
+	}
+
+	IEnumerator CoroutineSetScores(int[] scores, float duration){
 		float max = MaxScore (scores);
-		if (scores.Length == 6 && max>0) {
+		if (scores.Length == 6 && max > 0) {
 			float f = 0;
 			while (f < max) {
-				f = Mathf.Min(f+max/100f,max);
+				f = Mathf.Min (f + max / (duration*100f), max);
 				for (int j = 0; j < 6; j++) {
-					graph.SetScore(j,Mathf.Min ((float)scores[j], f));
+					graph.SetScore (j, Mathf.Min ((float)scores [j], f));
 				}
 				graph.DisplayResults (max);
-				yield return null;
+				yield return new WaitForSeconds(0.01f);
 			}
 		}
+		else if (scores.Length == 6 && max == 0) {
+			for (int j = 0; j < 6; j++) {
+				graph.SetScore (j, 0f);
+			}
+			graph.DisplayResults (1f);
+		}
 		coroutine = null;
-		GameValuesContainer.container.menuWrapper.GetComponentInChildren<ResultsCanvas> ().OnGraphDisplayed ();
+		parentCanvas.OnGraphDisplayed ();
 	}
 
 	float MaxScore(int[] array){

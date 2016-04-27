@@ -33,7 +33,7 @@ abstract public class BossOrEnemy : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) { // effects of collision with other objects
 		if (other.GetComponent<PlayerShip> () != null) {
-			other.GetComponent<PlayerShip> ().Explode (); // destroy colliding player
+			other.GetComponent<PlayerShip> ().Explode(); // destroy colliding player
 		}
 	}
 }

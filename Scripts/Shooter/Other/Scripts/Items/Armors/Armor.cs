@@ -6,4 +6,21 @@ using System.Collections;
 
 abstract public class Armor : Item {
 
+	public int TakenDamage(){
+		return damage;
+	}
+
+	public void TakeDamage(int damage){
+		this.damage += damage;
+	}
+
+	public bool IsBroken(){
+		if (breakResistance < 0) {
+			return false;
+		}
+		else {
+			return (damage > breakResistance);
+		}
+	}
+
 }

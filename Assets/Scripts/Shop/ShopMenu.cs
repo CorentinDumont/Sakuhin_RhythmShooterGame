@@ -79,7 +79,6 @@ public class ShopMenu : MonoBehaviour {
 		typePanel.SetFocus (true);
 
 		SelectType (typePanel.GetSelectedChoice());
-		itemPanel.Display (0);
 	}
 
 	// Defines the behaviour of the menu when the user select an item or press an arrow or return/enter

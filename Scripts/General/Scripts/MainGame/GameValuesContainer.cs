@@ -8,6 +8,8 @@ public class GameValuesContainer {
 
 	public MainGameCamera mainCamera;
 
+	public Stage currentStage;
+
 	public ShooterEventsHandler shooterHandler;
 	public RhythmEventsHandler rhythmHandler;
 	public AudioHandler audioHandler;
@@ -27,6 +29,8 @@ public class GameValuesContainer {
 	public int currentArmor = -1;
 	public Weapon[] possibleWeapons;
 	public int currentWeapon = -1;
+	public int spawnedEnemies = 0;
+	public int killedEnemies = 0;
 
 	public int combo = 0; // current combo
 	public int maxCombo = 0; // biggest combo the player has done in the play

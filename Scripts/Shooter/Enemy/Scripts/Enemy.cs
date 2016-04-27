@@ -9,11 +9,15 @@ abstract public class Enemy : BossOrEnemy {
 	override public void TakeDamages(int damages){
 		hp -= damages;
 		if (hp <= 0) {
+			GameValuesContainer.container.killedEnemies++;
 			Explode ();
 		}
 	}
 
 	void OnTriggerEnter(Collider other) { // effects of collision with other objects
+		if (other.GetComponent<PlayerShip> () != null) {
+			other.GetComponent<PlayerShip> ().Explode();
+		}
 		if (other.GetComponent<PlayerShip> () != null || other.GetComponent<Enemy> () != null) {
 			Explode (); // destroy itself
 		}

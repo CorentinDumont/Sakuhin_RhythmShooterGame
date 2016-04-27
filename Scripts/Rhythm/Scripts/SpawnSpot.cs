@@ -4,22 +4,33 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-abstract public class SpawnSpot : MonoBehaviour {
+public class SpawnSpot : MonoBehaviour {
 
 	public GameObject[] bubbles; // prefabs of the Bubbles
 	public GameObject[] targets; // the target to reach (may be changed to an array of several targets)
 	public float[] reachTimesByDifficulty = new float[4]{1f,1f,1f,1f}; // Times for bubbles to reach their target
 
-	protected float stageDuration; // length of the stage
-	protected bool isInitialized = false;
-	protected int difficulty = 1; // difficulty (will varies in function of used items
-	protected float currentAudioTime = 0;
-	protected int numberLoops = 0;
-	protected Dictionary<string, Queue<float> > beats; // Contains the beats pattern of the stage
+	private float stageDuration; // length of the stage
+	//private bool isInitialized = false;
+	private int difficulty = 1; // difficulty (will varies in function of used items
+	private float currentAudioTime = 0;
+	private int numberLoops = 0;
+	private Queue<BeatInformation> beats; // Contains the beats pattern of the stage
 
-	abstract protected float[] BeatsTimes ();
-	abstract protected string[] BeatsLabels ();
-	abstract protected void SpawnInRhythm ();
+	private struct BeatInformation{
+		public BeatInformation(float time, int type, int target, int diffMin, int diffMax){
+			this.time = time;
+			this.type = type;
+			this.target = target;
+			this.diffMin = diffMin;
+			this.diffMax = diffMax;
+		}
+		public float time;
+		public int type;
+		public int target;
+		public int diffMin;
+		public int diffMax;
+	}
 
 	void Start(){
 		stageDuration = GameValuesContainer.container.stageDuration;
@@ -27,9 +38,12 @@ abstract public class SpawnSpot : MonoBehaviour {
 	}
 
 	void fillBeats(){ // Defines the times where the beats of the rhythm games are
-		beats = new Dictionary<string, Queue<float> >();
-		float[] times = BeatsTimes ();
-		string[] types = BeatsLabels ();
+		beats = new Queue<BeatInformation> ();
+		float[] beatsTimes = GameValuesContainer.container.currentStage.BeatsTimes();
+		int[] beatsTypes = GameValuesContainer.container.currentStage.BeatsTypes();
+		int[] beatsTargets = GameValuesContainer.container.currentStage.BeatsTargets();
+		int[] beatsDiffMin = GameValuesContainer.container.currentStage.BeatsDifficultiesMin();
+		int[] beatsDiffMax = GameValuesContainer.container.currentStage.BeatsDifficultiesMax();
 		float time = 0;
 		int loop = -1;
 		int i = 0;
@@ -37,12 +51,10 @@ abstract public class SpawnSpot : MonoBehaviour {
 			if (i == 0) {
 				loop += 1;
 			}
-			time = times [i] + loop * GameValuesContainer.container.audioHandler.stageMusic.length;
-			if (!beats.ContainsKey (types [i])) {
-				beats [types [i]] = new Queue<float> ();
-			}
-			beats [types [i]].Enqueue (time);
-			i = (int)Mathf.Repeat (i + 1, Mathf.Min (times.Length, types.Length));
+			time = beatsTimes [i] + loop * GameValuesContainer.container.audioHandler.stageMusic.length;
+			BeatInformation info = new BeatInformation (time, beatsTypes [i], beatsTargets [i], beatsDiffMin [i], beatsDiffMax [i]);
+			beats.Enqueue (info);
+			i = (int)Mathf.Repeat (i + 1, beatsTimes.Length);
 		}
 
 	}
@@ -52,16 +64,16 @@ abstract public class SpawnSpot : MonoBehaviour {
 		return currentAudioTime + numberLoops * GameValuesContainer.container.audioHandler.stageMusic.length;
 	}
 
-	void setDifficulty(int difficulty){
+	public void SetDifficulty(int difficulty){
 		this.difficulty = difficulty;
 	}
 
 	public void IncreaseDifficulty(){
-		setDifficulty (Mathf.Min(4,difficulty + 1));
+		SetDifficulty (Mathf.Min(4,difficulty + 1));
 	}
 
 	public void DecreaseDifficulty(){
-		setDifficulty (Mathf.Max(1,difficulty - 1));
+		SetDifficulty (Mathf.Max(1,difficulty - 1));
 	}
 
 	protected void Spawn(GameObject target, float reachTime, int bubbleIndex=0){ // Spawn a bubble
@@ -89,6 +101,16 @@ abstract public class SpawnSpot : MonoBehaviour {
 			////// Spawning in function of difficulty //////
 			////////////////////////////////////////////////
 			SpawnInRhythm();
+		}
+	}
+		
+	void SpawnInRhythm(){
+		float realTime = currentAudioTime + numberLoops * GameValuesContainer.container.audioHandler.stageMusic.length;
+		while(beats.Count>0 && beats.Peek().time<realTime+reachTimesByDifficulty[difficulty-1]){
+			BeatInformation info = beats.Dequeue ();
+			if (info.diffMin <= difficulty && info.diffMax >= difficulty) {
+				Spawn (targets [info.target], info.time - realTime, info.type);
+			}
 		}
 	}
 }

@@ -53,7 +53,7 @@ public class Enemy01 : Enemy {
 				this.transform.LookAt (Utility.DirectionBetween (directionOrigin, directionFinal, degree) + this.transform.position, vectorUp);
 				GetComponent<Rigidbody> ().velocity = Utility.GetDirection (this.transform, vectorForward) * speed;
 			}
-			yield return null;
+			yield return new WaitForSeconds(0.05f);
 		}
 		yield return new WaitForSeconds (Random.Range(0,1));
 		coroutine = null;

@@ -34,13 +34,13 @@ public class PlayerTile : MonoBehaviour {
 				float score = Mathf.Abs (currentAudioTime - bubble.GetBeatTime ());
 				if (score < 0.02) {
 					SendScore (5); // Fantastic precision
-				} else if (score < 0.07) {
+				} else if (score < 0.04) {
 					SendScore (4); // Great precision
-				} else if (score < 0.12) {
+				} else if (score < 0.1) {
 					SendScore (3); // Good precision
-				} else if (score < 0.2) {
+				} else if (score < 0.15) {
 					SendScore (2); // Almost precision
-				} else if (score < 0.5) {
+				} else if (score < 0.2) {
 					SendScore (1); // Bad precision
 				} else {
 					SendScore (0); // Miss

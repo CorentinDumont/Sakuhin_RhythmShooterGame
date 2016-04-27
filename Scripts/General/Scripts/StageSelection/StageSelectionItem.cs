@@ -59,7 +59,7 @@ public class StageSelectionItem : MonoBehaviour {
 			while (f != 1f) {
 				f = Mathf.Min(1f,f+1f/20f);
 				audioSource.volume = f;
-				yield return null;
+				yield return new WaitForSeconds(0.05f);
 			}
 		}
 		coroutineFade = null;
@@ -72,7 +72,7 @@ public class StageSelectionItem : MonoBehaviour {
 			while (f != 0f) {
 				audioSource.volume = f;
 				f = Mathf.Max(0,f-1f/15f);
-				yield return null;
+				yield return new WaitForSeconds(0.05f);
 			}
 			audioSource.Stop ();
 		}

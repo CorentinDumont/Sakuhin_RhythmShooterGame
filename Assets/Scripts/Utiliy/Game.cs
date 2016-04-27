@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [System.Serializable] // so that the Game class can be converted to binary format and be saved
 public class Game { 
@@ -12,10 +13,18 @@ public class Game {
 	public static Game current; // static, so can be called from anywhere by Came.current, it represents the current save
 	public string[] weapons; // weapons that are attached to the playership
 	public string[] armors; // armors that are attached to the playership
+	public Dictionary<string,int> bestScore;
+	public Dictionary<string,int> bestCombo;
+	public Dictionary<string,int[]> bestRhythmScores;
+	public Dictionary<string,int> bestGrade;
 
 	public Game () {
 		weapons = new string[] {"LaserLevel0","","",""};
 		armors = new string[] {"","","",""};
+		bestScore = new Dictionary<string,int> ();
+		bestCombo = new Dictionary<string,int> ();
+		bestRhythmScores = new Dictionary<string,int[]> ();
+		bestGrade = new Dictionary<string,int> ();
 	}
 
 	static bool IsInArray(string[] array, string s){
