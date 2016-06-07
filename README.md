@@ -1,10 +1,11 @@
 # Sakuhin_RhythmShooterGame
 
 ####################################################
-## Please have a look at プログラマ作品_README.pdf for further explanations (in Japanese) ##
-## Please have a look at 作品_アピール.pdf for the promotion of the game (in Japanese) ##
-####################################################
+### Please have a look at :
+- プログラマ作品_README.pdf for further explanations (in Japanese)
+- 作品_アピール.pdf for the promotion of the game (in Japanese)
 
+### State :
 Developed entirely by Corentin Dumont.
 (using royalty free musics and 3D models/textures)
 
