@@ -1,37 +1,47 @@
 # Sakuhin_RhythmShooterGame
 
 ####################################################
-## Please have a look at 作品_Dumont_Corentin.pdf ##
+## Please have a look at プログラマ作品_README.pdf  ##
 ####################################################
 
-Developped entirely by Corentin Dumont.
+Developed entirely by Corentin Dumont.
+(using royalty free musics and 3D models/textures)
 Still under development.
 
-Game developped with Unity version 5.3.1f1.
-Repository contains this application built for OS X only, and the Assets folder of the game.
+Game developed with Unity version 5.3.1f1.
+Repository contains this application built for OS X and Windows, and the Assets folder of the game.
+
+#####
 A folder containing all scripts is also put at the root, as it is the most valuable work.
-The layout is not adapted to all screen resolution (ratio), so it may look ugly with some resolution, it will be corrected afterward.
+Please, have a look in particular at :
+Scripts/Scripts_General/AI/AI.cs
+Scripts/Scripts_General/Utility/Utility.cs
+Scripts/Scripts_General/Utility/Matrix.cs
+Scripts/Scripts_Rhythm/PlayerTile.cs
+Scripts/Scripts_Rhythm/SpawnSpot.cs
+Scripts/Scripts_Shooting_Enemies/Boss01.cs
+Scripts/Scripts_Shooting_Others/PlayerShip.cs
+#####
 
 Game's rules:
 
-Choose your weapons in the Weapon's shop, and play. This is a mix between a Shooter game and a Rhythm game, when you perform well on the Rhythm game, your spaceship becomes stronger in the Shooter game. The challenge is to play two different games at the same time to survive and get stronger, until the boss appear...
+Choose your weapons in the Weapon's shop, and play.
+This is a mix between a Shooter game and a Rhythm game, when you perform well on the Rhythm game, your spaceship becomes stronger in the Shooter game.
+The challenge is to play two different games at the same time to survive and get stronger, until the boss appear...
 
 Game's controls:
 
--Move the ship with the arrows.
+-Move the ship with the arrows of the keyboard.
 
--Tap on the "f","g" and "h" keys (respectively for the left, middle and right tiles) in rhythm with the beats of the music. 
+-Tap on the [1],[2] and [3] keys (respectively for the left, middle and right tiles) in rhythm with the beats of the music. (If you don't have [1,2,3] keys, you can use [q,w,e] or [a,s,d].)
 
--Tap on "p" to pause/unpause.
+-Tap on [p] to pause/unpause.
 
--Tap on "u"/"i" to decrease/increase the difficulty of the rythm game. (This will of course be done automatically in the final version)
+-Tap on [o] to use/stop the AI that controls the ship in the shooting game.
 
 To do list:
 
 Add/Finish to create more ennemies
-Make the level automatic
-Improve the results panel
-Display the results panel automatically
 Add/ Finish to create more stages
-Solve some problems with textures
-Solve some problems with layout
+Improve the AI (make it able to learn to avoid enemies' laser)
+Improve the functioning of the "Reset Save" of the title.
