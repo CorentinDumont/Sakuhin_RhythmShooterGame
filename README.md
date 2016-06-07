@@ -1,7 +1,7 @@
 # Sakuhin_RhythmShooterGame
 
 ####################################################
-## Please have a look at プログラマ作品_README.pdf  ##
+## Please have a look at プログラマ作品_README.pdf (in Japanese) ##
 ####################################################
 
 Developed entirely by Corentin Dumont.
@@ -13,7 +13,6 @@ Game developed with Unity version 5.3.1f1.
 
 Repository contains this application built for OS X and Windows, and the Assets folder of the game.
 
-#####
 A folder containing all scripts is also put at the root, as it is the most valuable work.
 Please, have a look in particular at :
 - Scripts/Scripts_General/AI/AI.cs
@@ -23,7 +22,6 @@ Please, have a look in particular at :
 - Scripts/Scripts_Rhythm/SpawnSpot.cs
 - Scripts/Scripts_Shooting_Enemies/Boss01.cs
 - Scripts/Scripts_Shooting_Others/PlayerShip.cs
-#####
 
 ###Game's rules:
 
